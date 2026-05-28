@@ -1,0 +1,32 @@
+name: linkedin-growth-os
+version: 1.0.0
+description: LinkedIn Growth OS — Prospection B2B automatisée sur Hermes
+author: DeptFlow
+license: proprietary
+platforms: [linux, macos]
+
+hermes:
+  min_version: "2.0.0"
+  hooks:
+    - on_session_start
+    - on_session_end
+  cli_commands:
+    - setup
+    - start
+    - stop
+    - status
+    - update
+
+config:
+  license_key:
+    required: true
+    description: Clé de licence LinkedIn Growth OS
+  bereach_api_key:
+    required: true
+    description: Clé API BeReach (configurée automatiquement)
+  icp_file:
+    required: true
+    description: Chemin vers le fichier ICP client
+  composio_mcp:
+    required: false
+    description: MCP Composio activé (google-sheets, telegram)
