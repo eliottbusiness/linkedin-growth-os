@@ -1,92 +1,138 @@
 # LinkedIn Growth OS
 
+> Prospection B2B automatisée sur LinkedIn — Plugin Hermes
+
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-proprietary-red)
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-green)
 
-**LinkedIn Growth OS** est un plugin Hermes pour la prospection B2B automatisée via l'API BeReach. Il permet d'automatiser lidentification et la qualification de prospects LinkedIn.
+---
 
-## Fonctionnalités
-
-- **Prospection B2B automatisée** — Recherche et qualification de prospects via l'API BeReach
-- **ICP configurable** — Définissez votre client idéal (taille, localisation, rôles)
-- **Wizard d'onboarding** — Configuration guidée pas à pas
-- **Intégration Composio** — Connexion google-sheets, telegram, notion, slack
-- **Lifecycle hooks** — Validation automatique de license au démarrage
-
-## Installation
+## Installation (1 commande)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/eliottbusiness/linkedin-growth-os/main/install.sh | bash
 ```
 
-Ou manuellement:
+> Si le lien ci-dessus ne fonctionne pas, utilisez le **miroir de backup** :
+> ```bash
+> curl -fsSL https://gist.githubusercontent.com/eliottbusiness/4779ee4c1b977fc51cd66e6b35988735/raw/install.sh | bash
+> ```
 
-```bash
-git clone https://github.com/eliottbusiness/linkedin-growth-os.git ~/.hermes/plugins/linkedin-growth-os
-```
+---
 
-## Configuration
-
-Lancez le wizard d'onboarding:
+## Setup initial
 
 ```bash
 hermes linkedin-growth-os setup
 ```
 
-Le wizard vous demandera:
-1. Clé de licence (reçue par email)
-2. Description de votre offre
-3. Taille d'entreprise visée
-4. Localisation géographique
-5. Rôles des décideurs (CEO, Founder, etc.)
-6. Configuration Composio MCP
+Le wizard interactif vous guidera pour :
+1. 📋 Saisir votre clé de licence
+2. 💼 Définir votre offre (ce que vous vendez)
+3. 🎯 Configurer votre ICP (taille entreprise, localisation, rôles cibles)
+4. 🔗 Activer les MCP Composio (Google Sheets, Telegram)
 
-## Commandes CLI
+---
 
-| Commande | Description |
-|----------|-------------|
-| `hermes linkedin-growth-os setup` | Lance le wizard de configuration |
-| `hermes linkedin-growth-os start` | Démarre le moteur de prospection |
-| `hermes linkedin-growth-os stop` | Arrête le moteur de prospection |
-| `hermes linkedin-growth-os status` | Affiche le statut du plugin |
-| `hermes linkedin-growth-os update` | Met à jour le plugin |
+## Démarrage
 
-## Utilisation
-
-Après configuration:
-
-```
+```bash
+# Lancer la prospection automatique
 hermes linkedin-growth-os start
-# Puis dans l'agent:
-/linkedin-growth-os Trouve des CEOs de startups SaaS en France
+
+# Ou parler directement à l'agent
+/linkedin-growth-os Prospect des CEOs SaaS B2B en France
 ```
+
+---
+
+## Les 7 workflows
+
+| ID | Workflow | Objectif |
+|----|----------|----------|
+| **WF01** | Prospection Lead Qualifié | Identifier et scorer des prospects selon l'ICP |
+| **WF02** | Outreach Multi-Touch | Transformer un prospect en conversation commerciale |
+| **WF03** | Publication Automatique | Publier du contenu LinkedIn depuis un calendrier |
+| **WF04** | Lead Magnet Automatique | Envoyer un lead magnet aux comentaristes déclencheurs |
+| **WF05** | Competitor Intent Hijacking | Capter les prospects qui interagissent avec vos concurrents |
+| **WF06** | Hiring Signal Detector | Détecter les entreprises en recrutement actif |
+| **WF07** | Viral Content Intelligence | Analyser les patterns de contenu viral |
+
+---
 
 ## Architecture
 
 ```
 linkedin-growth-os/
-├── plugin.yaml          # Manifeste du plugin Hermes
-├── __init__.py          # Module principal (register, hooks, CLI)
-├── cli.py               # Wizard interactif + commandes
-├── skills/              # Skill Hermes (prompts, config)
-├── install.sh           # Script d'installation
+├── plugin.yaml                    ← Manifest du plugin Hermes
+├── __init__.py                    ← Hooks de registre
+├── cli.py                         ← Wizard setup + commands CLI
+├── install.sh                     ← Script d'installation
 ├── README.md
-└── LICENSE
+├── LICENSE
+└── skills/linkedin-growth-os/
+    ├── SKILL.md                   ← Entry point de l'agent
+    └── workflows/
+        ├── wf01-wf07.md           ← Détail de chaque workflow
 ```
 
-## API Keys Requises
+---
 
-- **License Key** — Fournie par DeptFlow
-- **BeReach API Key** — Configurée automatiquement après connexion
+## Prérequis
+
+- **Hermes Agent** installé ([Installation](https://hermes-agent.nousresearch.com/docs))
+- **Compte BeReach** avec clés API
+- **MCP Composio** configuré avec : `google-sheets`, `telegram`
+
+---
+
+## Configuration MCP Composio
+
+Dans l'app Composio, activez ces outils :
+
+| Tool | Required | Usage |
+|------|----------|-------|
+| `google-sheets` | ✅ Oui | Écriture des prospects contactés |
+| `telegram` | ✅ Oui | Rapports quotidiens |
+| `notion` | Optionnel | CRM alternatif |
+| `slack` | Optionnel | Notifications Slack |
+
+---
+
+## Endpoint BeReach utilisés
+
+| Endpoint | Action |
+|----------|--------|
+| `POST /search/linkedin/people` | Recherche prospects |
+| `POST /search/linkedin/posts` | Recherche posts |
+| `POST /visit/linkedin/profile` | Enrichissement profil |
+| `POST /visit/linkedin/company` | Enrichissement entreprise |
+| `POST /collect/linkedin/posts` | Collecte posts |
+| `POST /collect/linkedin/comments` | Collecte commentaires |
+| `POST /collect/linkedin/likes` | Collecte likeurs |
+| `POST /connect/linkedin/profile` | Demande de connexion |
+| `POST /message/linkedin` | Envoi DM |
+| `POST /analytics/linkedin/post` | Analytics post |
+
+---
+
+## Limites de sécurité
+
+| Action | Limite / jour |
+|--------|---------------|
+| Demandes de connexion | 30 |
+| Messages directs | 50 |
+| Visites de profil | 100 |
+
+> Ces limites protègent votre compte LinkedIn. Le plugin respecte automatiquement ces seuils.
+
+---
 
 ## Support
 
-- Documentation: https://docs.deptflow.io
-- Email: support@deptflow.io
-- Issues: https://github.com/eliottbusiness/linkedin-growth-os/issues
+Contactez votre consultant DeptFlow ou ouvrez un message LinkedIn.
 
-## License
+---
 
-Copyright (c) 2026 DeptFlow. Tous droits réservés.
-L'utilisation de ce plugin est soumise à la licence propriétaire DeptFlow.
+**DeptFlow** — © 2026 | [deptflow.io](https://deptflow.io)
