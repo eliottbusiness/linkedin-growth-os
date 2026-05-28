@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 HERMES_HOME = Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
 PLUGIN_CONFIG = HERMES_HOME / "plugins" / "linkedin-growth-os" / "config.json"
-LICENSE_SERVER_URL = "https://license.deptflow.io/validate"  # à remplacer
+LICENSE_SERVER_URL = "https://deptflow-license-server.eliott-dardeau-pro.workers.dev/validate"
 
 def validate_license(key: str) -> dict:
     """Valide la license key auprès du serveur DeptFlow."""
